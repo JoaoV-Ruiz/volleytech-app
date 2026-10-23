@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <!--
+      Política de segurança de conteúdo: o app só carrega código dos próprios arquivos e só
+      conversa com o Supabase. Um script injetado por terceiros não roda nem envia dados para fora.
+      O GitHub Pages não deixa configurar cabeçalhos, por isso vai como meta.
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://odbgjviihmbniaefnvin.supabase.co wss://odbgjviihmbniaefnvin.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"
+    />
+    <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+    <!-- viewport-fit=cover: no iPhone, o app instalado ocupa a tela toda e respeita o recorte da câmera. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover" />
+    <title>Volley Tech</title>
+
+    <!-- App instalável (PWA) -->
+    <!-- Nome novo força o celular a baixar o manifesto atual (o antigo fica guardado em cache por até 1 hora). -->
+    <link rel="manifest" id="vt-manifest" href="/app-manifest.json" />
+    <!-- Troca o manifesto no Samsung Internet (ver o arquivo). Precisa vir logo depois do link. -->
+    <script src="/pick-manifest.js"></script>
+    <meta name="theme-color" content="#0B1413" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Volley Tech" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- The `react-native-web` recommended style reset: https://necolas.github.io/react-native-web/docs/setup/#root-element -->
+    <style id="expo-reset">
+      /* These styles make the body full-height */
+      html,
+      body {
+        height: 100%;
+      }
+      /* These styles disable body scrolling if you are using <ScrollView> */
+      body {
+        overflow: hidden;
+        background-color: #0b1413;
+      }
+      /* These styles make the root element full-height */
+      #root {
+        display: flex;
+        height: 100%;
+        flex: 1;
+      }
+    </style>
+
+    <!-- Tela de abertura (some quando o app termina de carregar; ver /launch.js). -->
+    <link rel="preload" as="image" href="/launch-logo.webp" />
+    <style id="vt-launch-style">
+      #vt-launch {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        background-color: #0b1413;
+        transition: opacity 0.35s ease, visibility 0.35s;
+      }
+      #vt-launch.vt-out {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+      /* Escudo entra girando e depois quica de leve, como bola no ar. */
+      #vt-launch .vt-badge {
+        width: 136px;
+        height: 136px;
+        animation: vt-in 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both,
+          vt-bounce 1.3s cubic-bezier(0.45, 0, 0.55, 1) 0.7s infinite;
+      }
+      #vt-launch .vt-shadow {
+        width: 84px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: #35c7ba;
+        opacity: 0.28;
+        animation: vt-fade 0.5s ease 0.3s both, vt-shadow 1.3s cubic-bezier(0.45, 0, 0.55, 1) 0.7s infinite;
+      }
+      /* Faixa quadriculada do clube correndo no rodapé. */
+      #vt-launch .vt-checker {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: calc(28px + env(safe-area-inset-bottom));
+        height: 16px;
+        background: conic-gradient(#35c7ba 25%, #0b1413 0 50%, #35c7ba 0 75%, #0b1413 0) 0 0 / 16px 16px;
+        animation: vt-fade 0.5s ease 0.4s both, vt-slide 0.9s linear infinite;
+      }
+      @keyframes vt-in {
+        from {
+          opacity: 0;
+          transform: scale(0.5) rotate(-40deg);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1) rotate(0deg);
+        }
+      }
+      @keyframes vt-bounce {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-12px);
+        }
+      }
+      @keyframes vt-shadow {
+        0%,
+        100% {
+          transform: scaleX(1);
+          opacity: 0.28;
+        }
+        50% {
+          transform: scaleX(0.7);
+          opacity: 0.14;
+        }
+      }
+      @keyframes vt-fade {
+        from {
+          opacity: 0;
+        }
+      }
+      @keyframes vt-slide {
+        to {
+          background-position: 16px 0;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #vt-launch .vt-badge,
+        #vt-launch .vt-shadow,
+        #vt-launch .vt-checker {
+          animation: none;
+        }
+      }
+    </style>
+    <!-- Recarrega uma vez se o script do app sumiu depois de uma publicação (ver o arquivo). -->
+    <script src="/reload-guard.js"></script>
+  <link rel="icon" href="/favicon.ico"/></head>
+
+  <body>
+    <noscript>Ative o JavaScript para usar o app do Volley Tech.</noscript>
+    <!-- The root element for your Expo app. -->
+    <div id="root"></div>
+    <div id="vt-launch" role="status" aria-label="Abrindo o Volley Tech">
+      <img class="vt-badge" src="/launch-logo.webp" width="136" height="136" alt="" />
+      <div class="vt-shadow"></div>
+      <div class="vt-checker"></div>
+    </div>
+    <script src="/launch.js"></script>
+  <script src="/_expo/static/js/web/entry-1cd08f5a211d9a1d4b5cd6469d3c563b.js" defer></script>
+</body>
+</html>
